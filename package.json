@@ -1,0 +1,24 @@
+{
+  "name": "loqu",
+  "version": "0.0.1",
+  "description": "A package thats makes and queuing heavy tasks and logging easy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaadabbasi/loqu.git"
+  },
+  "keywords": [
+    "loqu",
+    "web-worker",
+    "logging"
+  ],
+  "author": "isaadabbasi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isaadabbasi/loqu/issues"
+  },
+  "homepage": "https://github.com/isaadabbasi/loqu#readme"
+}
