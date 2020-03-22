@@ -55,3 +55,6 @@ const MakeService = (function() {
     return new ProcessQueue(workerService, './worker.js', config);
   };
 })();
+
+module.exports.makeService = MakeService;
+module.exports = MakeService;
