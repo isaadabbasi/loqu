@@ -1,6 +1,6 @@
 {
   "name": "loqu",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A package thats makes and queuing heavy tasks and logging easy",
   "main": "index.js",
   "scripts": {

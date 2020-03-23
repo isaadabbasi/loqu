@@ -1,17 +1,31 @@
+const WorkerScope = require('./worker');
+
 class WorkerService {
   constructor() {
     this.registry = new Map();
     this.onBeforeWindowUnload();
   }
-
-  register(pathToScript, config) {
-    const worker = new Worker(pathToScript);
-    const token = Symbol(pathToScript);
+  createInlineWorker() {
+    var blobURL = URL.createObjectURL(
+        new Blob(['(', WorkerScope, ')()'], {
+          type: 'application/javascript'
+        })
+      ),
+      loquWorker = new Worker(blobURL);
+    return loquWorker;
+  }
+  register(config) {
+    const worker = this.createInlineWorker();
+    console.log('worker: ', worker);
+    const hash = Date.now(); // TODO - Change now
+    const token = Symbol(hash);
     config.isPayloadValid = config.isPayloadValid
       ? config.isPayloadValid.toString()
       : undefined;
     worker.postMessage(this.serialize('INIT_SERVICE', config));
     this.registry.set(token, worker);
+    console.log('worker registry: ', this.registry);
+    window.loquWorker = undefined;
     return token;
   }
   onBeforeWindowUnload() {
@@ -36,10 +50,10 @@ class WorkerService {
     return this.registry.get(token);
   }
 }
-class ProcessQueue {
-  constructor(workerService, pathToScript, config) {
+class LogQueue {
+  constructor(workerService, config) {
     this.workerService = workerService;
-    this.token = workerService.register(pathToScript, config);
+    this.token = workerService.register(config);
   }
   send(payload) {
     this.workerService.sendMessage(this.token, null, payload);
@@ -47,14 +61,16 @@ class ProcessQueue {
   set onmessage(fn) {
     this.workerService.getWorkerByToken(this.token).onmessage = fn;
   }
+  set onerror(fn) {
+    this.workerService.getWorkerByToken(this.token).onerror = fn;
+  }
 }
 
 const MakeService = (function() {
   const workerService = new WorkerService();
   return function(config) {
-    return new ProcessQueue(workerService, './worker.js', config);
+    return new LogQueue(workerService, config);
   };
 })();
 
-module.exports.makeService = MakeService;
-module.exports = MakeService;
+module.exports;
