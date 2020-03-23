@@ -73,4 +73,4 @@ const MakeService = (function() {
   };
 })();
 
-module.exports;
+module.exports = MakeService;

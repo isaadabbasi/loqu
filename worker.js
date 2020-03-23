@@ -17,24 +17,21 @@ module.exports = function WorkerScope() {
   }
 
   class ProcessQ {
-    errorQueue = [];
-    eventsBuffer; // queue must have this length before sending to server
-    interval; // setTimeout seconds
-    onError;
-    onSuccess;
-    queue = [];
-    retryCount;
-    WorkerScope;
-
     constructor(
       WorkerScope,
       { interval = 0, eventsBuffer = 15, onError, onSuccess }
     ) {
+      // configurable class properties
       this.eventsBuffer = eventsBuffer;
       this.interval = interval * 1000;
       this.onError = onError;
       this.onSuccess = onSuccess;
       this.WorkerScope = WorkerScope;
+
+      // defined class properties
+      this.errorQueue = [];
+      this.queue = [];
+
       function injectIdentifiers(target, id) {
         if (target && typeof target === 'object')
           target.toString = function() {
