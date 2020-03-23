@@ -48,11 +48,50 @@ $ npm intall loqu
 | retryCount | Number - Try retryCount times to send logs or dead letter queue                             |
 | headers    | Object - [See Docs](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) |
 
-### Insights
+#
 
-![](https://drive.google.com/open?id=1IRlorMXIs0eKGqa1gfVuw5RAjEBO-hpO)
+# Full Example
 
-### Development
+#
+
+```sh
+import loqu from 'loqu';
+
+const networkConfig = {
+      url: 'http://<my-app>.com/api/logs',
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'}
+      retryCount: 3,
+    }
+
+const logQueue = loqu({
+      eventsBuffer: 30, // Buffer atleast 30 log events
+      interval: 30, //  [optional] Attempt sending to network after *interval* seconds,
+      isPayloadValid: function(payload = {}) { // [optional] fn to check if log is valid and should be buffered
+      const required = ['actionName', 'actionCategory', 'startDateTime'];
+      const isValidPayload = required.every(key =>
+        payload.hasOwnProperty(key)
+      );
+      return isValidPayload; // must return boolean
+    },
+    onSuccess: networkConfig, // [optional] - if not set you will receieve queue of logs against onmessage
+    onError: networkConfig // [optional] - if not set you will receieve queue of logs against onmessage
+  });
+
+// Now you can start sending logs
+  logQueue.send({ // any payload you want to send. for example
+      actionName: 'tab-switch',
+      actionCategory: 'UI/Interaction',
+      startDateTime: new Date()
+  })
+
+loqQueue.onmessage = function(e) { // if network call fails logQueue will send you queue of messages here
+    console.log('got sent loqu: ', e.data);
+}
+loqQueue.onmessage = function(e) {
+    console.log('Error in logQueue: ', e.data);
+}
+```
 
 Development is continued. Feel free to raise issues or features
 [If want to contribute! WELCOME!!!](https://github.com/isaadabbasi/loqu)
