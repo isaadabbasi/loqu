@@ -1,4 +1,4 @@
-module.exports = function WorkerScope() {
+export default function WorkerScope() {
   function send(flightConfig, data) {
     const { url, method, headers } = flightConfig;
     return new Promise((resolve, reject) => {
@@ -183,4 +183,4 @@ module.exports = function WorkerScope() {
   self.onerror = function(e) {
     console.error('Error in analyticsService: ', e);
   };
-};
+}

@@ -1,4 +1,4 @@
-const WorkerScope = require('./worker');
+import WorkerScope from './worker';
 
 class WorkerService {
   constructor() {
@@ -16,7 +16,6 @@ class WorkerService {
   }
   register(config) {
     const worker = this.createInlineWorker();
-    console.log('worker: ', worker);
     const hash = Date.now(); // TODO - Change now
     const token = Symbol(hash);
     config.isPayloadValid = config.isPayloadValid
@@ -24,7 +23,6 @@ class WorkerService {
       : undefined;
     worker.postMessage(this.serialize('INIT_SERVICE', config));
     this.registry.set(token, worker);
-    console.log('worker registry: ', this.registry);
     window.loquWorker = undefined;
     return token;
   }
@@ -66,11 +64,8 @@ class LogQueue {
   }
 }
 
-const MakeService = (function() {
-  const workerService = new WorkerService();
-  return function(config) {
-    return new LogQueue(workerService, config);
-  };
-})();
+const workerService = new WorkerService();
 
-module.exports = MakeService;
+export default function(config) {
+  return new LogQueue(workerService, config);
+}
