@@ -17,10 +17,10 @@ Loqu makes it simple to generate app logs. Some of the features it provides are:
 $ npm intall loqu
 ```
 
-```sh
-1-  import loqu from 'loqu';
+```js
+import loqu from 'loqu';
 ...
-3-  const logQueue = loqu(configuration); // 👇 configuration details
+const logQueue = loqu(configuration); // 👇 configuration details
 ```
 
 ### Definition for loqu configuration
@@ -54,7 +54,7 @@ $ npm intall loqu
 
 #
 
-```sh
+```js
 import loqu from 'loqu';
 
 const networkConfig = {
